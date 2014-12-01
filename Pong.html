@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pong</title>
+	<link rel="stylesheet" type="text/css" href="./stylecanvas.css">
+	<link href='http://fonts.googleapis.com/css?family=Vollkorn:700' rel='stylesheet' type='text/css'>
+</head>
+<!-- CSS for background: avoid background on canvas -->
+
+
+<style type="text/css">
+	#the_canvas {
+		background-color: rgba(50, 199, 210, 0.92);
+		margin: 0 auto;
+		display: block;
+		}
+
+	#pongTable {
+		left: 25%;
+		top: 15%;
+		bottom: 20%;
+	}
+
+
+</style>
+<header>PONG</header>
+<body>
+<!-- canvas div to center it -->
+<div id="pongTable">
+<!-- canvas element -->
+<canvas id="the_canvas" height="600" width="300"></canvas>
+</div>
+
+<div><p>Score</p></div>
+
+<div><p>links</p></div>
+<script>
+//table
+//Players
+
+
+Player = function(x,y) {
+	this.x = x;
+	this.y = y;
+	this.width = 50;
+	this.height = 5;
+	
+
+	this.draw = function(pad) {
+	
+	
+	pad.fillRect(this.x, this.y, this.width, this.height);
+}
+};
+
+Ball = function() {
+	this.x = 0;
+	this.y = 0;
+	this.r = 5;
+	this.velocityX = 0;
+	this.velocityY = 0;
+	this.draw = function (ball) {
+	ball.beginPath();
+	ball.arc(this.x, this.y, this.r, 0, Math.PI*2, false);
+	ball.fill();
+	}
+	this.refresh = function () {
+		this.x += this.velocityX;
+		this.y += this.velocityY;
+	}	
+
+};
+/// BLAAARGH MOVEMENT!!!!
+var handleKeyDown = function(evt) {
+	
+if (evt.keyCode === 65) {
+		//A is pressed
+	  pongGame.move(false);
+	}
+	else if (evt.keyCode === 68) {
+		//D is pressed
+		 pongGame.move(true);
+	}
+	
+	// if (evt.keyCode === 37) {
+	// 	//Left arrow is pressed
+	// 	pongGame.player2Mr = false;
+	// }
+	// else if (evt.keyCode === 39) {
+	// 	pongGame.player2Mr = true;
+	// }
+	};
+
+	
+
+//main refresh for game functionality
+Pong = function() {
+//canvas element and measurements
+	var canvas = document.getElementById("the_canvas");
+	this.width = canvas.width;
+	this.height= canvas.height;
+	this.context = canvas.getContext("2d");
+	this.context.fillStyle = "#fff";	
+//player pad dimensions
+	this.player1 = new Player(0,5);
+	this.player1.x = this.width/2 - this.player1.width/2;
+	this.player2 = new Player(0, 590);
+	this.player2.x = this.width/2 - this.player2.width/2;
+	this.player1Mr = true;
+	this.player2Mr = true; //boolean for movement? not sure if it's needed
+//ball dimensions and velocity
+	this.ball = new Ball();
+	this.ball.x = this.width/2;
+	this.ball.y = this.height/2;
+	this.ball.velocityY += Math.floor(Math.random()*10+this.ball.velocityX); // random direction for ball each time
+	this.ball.velocityX += Math.random()*10-this.ball.velocityY; //random direction for ball each time
+
+//draw functions
+	this.draw = function (){
+	// table
+	this.context.clearRect(0, 0, this.width, this.height);
+	this.context.fillRect(0, this.height, this.width, 2);
+	//ball
+	this.ball.draw(this.context);
+	//Players
+	this.player1.draw(this.context);
+	console.log(this.player1);
+	this.player2.draw(this.context);
+
+	}
+
+//MOVEMENT - goes here
+
+// 	var handleKeyDown = function(evt) {
+// 	var p1moveRight = true;
+// 	var pongGame.player2Mr = true;
+	
+// 	if (evt.keyCode === 68) {
+// 		//D is pressed
+// 	 p1moveRight = false;
+// 	}
+// 	else if (evt.keyCode === 65) {
+// 		//A is pressed
+// 		 p1moveRight = true;
+// 	}
+
+	this.move = function(moveR){
+	if (moveR) { //Right
+		this.player1.x=this.player1.x+0.5;
+	} else {
+		this.player1.x=this.player1.x-0.5;
+	}
+	 // if (this.player2.x > canvas.width) {
+  //     this.player2.x %= canvas.width;
+  //     this.player2.x = 0;
+  //   }
+}
+
+//refresh function to reset and call movement?
+	this.refresh = function () {
+		this.ball.refresh();
+
+
+		
+
+	
+
+
+
+
+	
+
+//same as Sean's concept of bounce but add || to make it bounce back - instead of size, go with ball.r	
+	if (this.ball.x > this.width || this.ball.x + this.ball.r < 0) {
+		this.ball.velocityX = -this.ball.velocityX;
+	} else if (this.ball.y > this.height || this.ball.y + this.ball.r < 0) {
+		this.ball.velocityY = -this.ball.velocityY;
+	}
+//player1
+
+//player2	
+	
+
+
+
+}
+};
+var pongGame = new Pong();
+window.addEventListener('keydown',handleKeyDown,true);
+
+
+
+//not sure  what to do with movement
+
+// var handleKeyDown = function(evt) {
+// 	if (evt.keyCode === 68) {
+// 		//D is pressed
+// 	 p1moveRight = false;
+// 	}
+// 	else if (evt.keyCode === 65) {
+// 		//A is pressed
+// 		 p1moveRight = true;
+// 	}
+
+	
+// };
+// var handleKeyDown2 = function(evt) {
+
+// 	if (evt.keyCode === 37) {
+// 		//Left arrow is pressed
+// 		pongGame.player2Mr = false;
+// 	}
+// 	else if (evt.keyCode === 39) {
+// 		pongGame.player2Mr = true;
+// 	}
+// 	};
+// window.addEventListener('keydown',handleKeyDown,true);
+
+
+
+//start animating the game
+
+Loop = function() {
+	pongGame.refresh();
+	pongGame.draw();
+};
+
+//start the loop and refresh at 60fps
+setInterval(Loop, 1000/60);
+</script>
+<footer>David e Daniel</footer>
+</body>
+
+</html>
